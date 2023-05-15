@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TransactionForm extends StatefulWidget {
-  final void Function(String, double) onSubmit;
+  final void Function(String, double, int) onSubmit;
 
   TransactionForm(this.onSubmit);
 
@@ -10,7 +10,7 @@ class TransactionForm extends StatefulWidget {
 }
 
 class _TransactionFormState extends State<TransactionForm> {
-  int _value = 1;
+  int valueRadio = 1;
   final titleController = TextEditingController();
 
   final valueController = TextEditingController();
@@ -22,7 +22,7 @@ class _TransactionFormState extends State<TransactionForm> {
     if (title.isEmpty || value <= 0) {
       return;
     }
-    widget.onSubmit(title, value);
+    widget.onSubmit(title, value, valueRadio);
   }
 
   @override
@@ -40,10 +40,10 @@ class _TransactionFormState extends State<TransactionForm> {
                   children: [
                     Radio(
                       value: 1,
-                      groupValue: _value,
+                      groupValue: valueRadio,
                       onChanged: (value) {
                         setState(() {
-                          _value = value!;
+                          valueRadio = value!;
                         });
                       },
                     ),
@@ -53,10 +53,10 @@ class _TransactionFormState extends State<TransactionForm> {
                     Text('Kleyte'),
                     Radio(
                       value: 2,
-                      groupValue: _value,
+                      groupValue: valueRadio,
                       onChanged: (value) {
                         setState(() {
-                          _value = value!;
+                          valueRadio = value!;
                         });
                       },
                     ),

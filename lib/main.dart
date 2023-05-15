@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kleyte_bibi/components/total_sum.dart';
+import 'package:kleyte_bibi/components/transaction_list_bibi.dart';
 import 'components/transaction_form.dart';
-import 'components/transaction_list.dart';
+import 'components/transaction_list_kleyte.dart';
 import 'models/transaction.dart';
 
 main() => runApp(Expenses());
@@ -24,29 +26,50 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _transaction = [
-    Transaction(
-      title: 'Gasolina',
-      value: 75,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      title: 'Unha',
-      value: 35,
-      date: DateTime.now(),
-    ),
+  List<Transaction> transactionKleyte = [
+    // Transaction(
+    //   title: 'Gasolina',
+    //   value: 75,
+    //   valueRadio: 1,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   title: 'Gasolina',
+    //   value: 50,
+    //   valueRadio: 1,
+    //   date: DateTime.now(),
+    // ),
+  ];
+  List<Transaction> transactionBibi = [
+    // Transaction(
+    //   title: 'Unha',
+    //   value: 35,
+    //   valueRadio: 2,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   title: 'Unha',
+    //   value: 35,
+    //   valueRadio: 2,
+    //   date: DateTime.now(),
+    // ),
   ];
 
-  _addTransaction(String title, double value) {
+  _addTransaction(String title, double value, int valueRadio) {
     final newTransaction = Transaction(
       title: title,
       value: value,
+      valueRadio: valueRadio,
       date: DateTime.now(),
     );
 
     setState(
       () {
-        _transaction.add(newTransaction);
+        if (valueRadio == 1) {
+          transactionKleyte.add(newTransaction);
+        } else {
+          transactionBibi.add(newTransaction);
+        }
       },
     );
     Navigator.of(context).pop();
@@ -78,14 +101,13 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Theme.of(context).colorScheme.primary,
-                child: Text('Total'),
-              ),
+            TotalSum(transactionKleyte, transactionBibi),
+            Row(
+              children: [
+                TransactionListKleyte(transactionKleyte),
+                TransactionListBibi(transactionBibi),
+              ],
             ),
-            TransactionList(_transaction),
           ],
         ),
       ),
