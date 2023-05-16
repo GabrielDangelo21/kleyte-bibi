@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:kleyte_bibi/components/total_sum.dart';
 import 'package:kleyte_bibi/components/transaction_list_bibi.dart';
@@ -28,12 +30,35 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Transaction> transactionKleyte = [
     // Transaction(
+    //   id: Random().nextDouble().toString(),
     //   title: 'Gasolina',
-    //   value: 75,
+    //   value: 50,
     //   valueRadio: 1,
     //   date: DateTime.now(),
     // ),
     // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Gasolina',
+    //   value: 50,
+    //   valueRadio: 1,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Gasolina',
+    //   value: 50,
+    //   valueRadio: 1,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Gasolina',
+    //   value: 50,
+    //   valueRadio: 1,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
     //   title: 'Gasolina',
     //   value: 50,
     //   valueRadio: 1,
@@ -42,37 +67,79 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
   List<Transaction> transactionBibi = [
     // Transaction(
-    //   title: 'Unha',
-    //   value: 35,
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Gasolina',
+    //   value: 50,
     //   valueRadio: 2,
     //   date: DateTime.now(),
     // ),
     // Transaction(
-    //   title: 'Unha',
-    //   value: 35,
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Gasolina',
+    //   value: 50,
+    //   valueRadio: 2,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Gasolina',
+    //   value: 50,
+    //   valueRadio: 2,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Gasolina',
+    //   value: 50,
+    //   valueRadio: 2,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: Random().nextDouble().toString(),
+    //   title: 'Gasolina',
+    //   value: 50,
     //   valueRadio: 2,
     //   date: DateTime.now(),
     // ),
   ];
 
-  _addTransaction(String title, double value, int valueRadio) {
+  _addTransaction(String title, double value, int valueRadio, DateTime date) {
     final newTransaction = Transaction(
+      id: Random().nextDouble().toString(),
       title: title,
       value: value,
       valueRadio: valueRadio,
-      date: DateTime.now(),
+      date: date,
     );
 
     setState(
       () {
         if (valueRadio == 1) {
           transactionKleyte.add(newTransaction);
+          for (int i = 0; i < transactionKleyte.length; i++) {
+            print(transactionKleyte[i].id);
+          }
         } else {
           transactionBibi.add(newTransaction);
+          for (int i = 0; i < transactionBibi.length; i++) {
+            print(transactionBibi[i].id);
+          }
         }
       },
     );
     Navigator.of(context).pop();
+  }
+
+  _removeTransactionKleyte(String id) {
+    setState(() {
+      transactionKleyte.removeWhere((tr) => tr.id == id);
+    });
+  }
+
+  _removeTransactionBibi(String id) {
+    setState(() {
+      transactionBibi.removeWhere((tr) => tr.id == id);
+    });
   }
 
   _openTransactionFormModal(BuildContext context) {
@@ -86,27 +153,50 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text('Kleyte & Bibi'),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => _openTransactionFormModal(context),
-            icon: Icon(Icons.add),
-          ),
-        ],
+    final appBar = AppBar(
+      title: Center(
+        child: Text('Kleyte & Bibi'),
       ),
+    );
+    final availableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TotalSum(transactionKleyte, transactionBibi),
-            Row(
-              children: [
-                TransactionListKleyte(transactionKleyte),
-                TransactionListBibi(transactionBibi),
-              ],
+            Container(
+              height: availableHeight * 0.07,
+              child: TotalSum(transactionKleyte, transactionBibi),
+            ),
+            Container(
+              height: availableHeight * 0.07,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text('Kleyte'),
+                  Text('Bibi'),
+                ],
+              ),
+            ),
+            Container(
+              height: availableHeight * 0.86,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TransactionListKleyte(
+                    transactionKleyte,
+                    _removeTransactionKleyte,
+                  ),
+                  TransactionListBibi(
+                    transactionBibi,
+                    _removeTransactionBibi,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
-  final void Function(String, double, int) onSubmit;
+  final void Function(String, double, int, DateTime) onSubmit;
 
   TransactionForm(this.onSubmit);
 
@@ -11,8 +12,9 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   int valueRadio = 1;
-  final titleController = TextEditingController();
+  DateTime date = DateTime.now();
 
+  final titleController = TextEditingController();
   final valueController = TextEditingController();
 
   _submitForm() {
@@ -22,7 +24,23 @@ class _TransactionFormState extends State<TransactionForm> {
     if (title.isEmpty || value <= 0) {
       return;
     }
-    widget.onSubmit(title, value, valueRadio);
+    widget.onSubmit(title, value, valueRadio, date);
+  }
+
+  _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2021),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        date = pickedDate;
+      });
+    });
   }
 
   @override
@@ -85,10 +103,31 @@ class _TransactionFormState extends State<TransactionForm> {
                 labelText: 'Valor (€)',
               ),
             ),
+            Container(
+              height: 70,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Data selecionada: ${DateFormat('dd/MM/y').format(date)}',
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: _showDatePicker,
+                    child: Text(
+                      'Selecionar data',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                ElevatedButton(
                   child: Text('Adicionar'),
                   style: TextButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.secondary,

@@ -32,8 +32,10 @@ class TotalSum extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.blue,
         ),
-        child: Text(
-          'Total €${(totalKleyte - totalBibi).toStringAsFixed(2)}',
+        child: Center(
+          child: Text(
+            'Total €${(totalKleyte - totalBibi).toStringAsFixed(2)}',
+          ),
         ),
       ),
     );
