@@ -45,95 +45,101 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
+    return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Card(
+          elevation: 5,
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Radio(
-                      value: 1,
-                      groupValue: valueRadio,
-                      onChanged: (value) {
-                        setState(() {
-                          valueRadio = value!;
-                        });
-                      },
+                    Row(
+                      children: [
+                        Radio(
+                          value: 1,
+                          groupValue: valueRadio,
+                          onChanged: (value) {
+                            setState(() {
+                              valueRadio = value!;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Kleyte'),
+                        Radio(
+                          value: 2,
+                          groupValue: valueRadio,
+                          onChanged: (value) {
+                            setState(() {
+                              valueRadio = value!;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('Bibi'),
+                      ],
                     ),
-                    SizedBox(
-                      width: 10,
+                  ],
+                ),
+                TextField(
+                  controller: titleController,
+                  onSubmitted: (_) => _submitForm(),
+                  decoration: InputDecoration(
+                    labelText: 'Título',
+                  ),
+                ),
+                TextField(
+                  controller: valueController,
+                  keyboardType: TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  onSubmitted: (_) => _submitForm(),
+                  decoration: InputDecoration(
+                    labelText: 'Valor (€)',
+                  ),
+                ),
+                Container(
+                  height: 70,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Data selecionada: ${DateFormat('dd/MM/y').format(date)}',
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _showDatePicker,
+                        child: Text(
+                          'Selecionar data',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      child: Text('Adicionar'),
+                      onPressed: _submitForm,
                     ),
-                    Text('Kleyte'),
-                    Radio(
-                      value: 2,
-                      groupValue: valueRadio,
-                      onChanged: (value) {
-                        setState(() {
-                          valueRadio = value!;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text('Bibi'),
                   ],
                 ),
               ],
             ),
-            TextField(
-              controller: titleController,
-              onSubmitted: (_) => _submitForm(),
-              decoration: InputDecoration(
-                labelText: 'Título',
-              ),
-            ),
-            TextField(
-              controller: valueController,
-              keyboardType: TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              onSubmitted: (_) => _submitForm(),
-              decoration: InputDecoration(
-                labelText: 'Valor (€)',
-              ),
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Data selecionada: ${DateFormat('dd/MM/y').format(date)}',
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: _showDatePicker,
-                    child: Text(
-                      'Selecionar data',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  child: Text('Adicionar'),
-                  onPressed: _submitForm,
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
