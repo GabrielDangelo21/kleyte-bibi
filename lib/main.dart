@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:kleyte_bibi/components/total_sum.dart';
-import 'package:kleyte_bibi/components/transaction_list_bibi.dart';
+import 'package:kleyte_bibi/colors.dart';
+import 'components/total_sum.dart';
+// import 'components/transaction_list.dart';
+import 'components/transaction_list_bibi.dart';
 import 'components/transaction_form.dart';
 import 'components/transaction_list_kleyte.dart';
 import 'models/transaction.dart';
@@ -14,9 +16,10 @@ class Expenses extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)
-            .copyWith(secondary: Colors.amber),
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: primary)
+            .copyWith(secondary: primary),
       ),
     );
   }
@@ -28,6 +31,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // List<Transaction> transactionList = [];
   List<Transaction> transactionKleyte = [
     // Transaction(
     //   id: Random().nextDouble().toString(),
@@ -103,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // ),
   ];
 
-  _addTransaction(String title, double value, int valueRadio, DateTime date) {
+  addTransaction(String title, double value, int valueRadio, DateTime date) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       title: title,
@@ -116,37 +120,33 @@ class _MyHomePageState extends State<MyHomePage> {
       () {
         if (valueRadio == 1) {
           transactionKleyte.add(newTransaction);
-          for (int i = 0; i < transactionKleyte.length; i++) {
-            print(transactionKleyte[i].id);
-          }
+          // transactionList.add(newTransaction);
         } else {
           transactionBibi.add(newTransaction);
-          for (int i = 0; i < transactionBibi.length; i++) {
-            print(transactionBibi[i].id);
-          }
+          // transactionList.add(newTransaction);
         }
       },
     );
     Navigator.of(context).pop();
   }
 
-  _removeTransactionKleyte(String id) {
+  removeTransactionKleyte(String id) {
     setState(() {
       transactionKleyte.removeWhere((tr) => tr.id == id);
     });
   }
 
-  _removeTransactionBibi(String id) {
+  removeTransactionBibi(String id) {
     setState(() {
       transactionBibi.removeWhere((tr) => tr.id == id);
     });
   }
 
-  _openTransactionFormModal(BuildContext context) {
+  openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (_) {
-        return TransactionForm(_addTransaction);
+        return TransactionForm(addTransaction);
       },
     );
   }
@@ -172,6 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
               height: availableHeight * 0.07,
               child: TotalSum(transactionKleyte, transactionBibi),
             ),
+            // TransactionList(transactionList),
             Container(
               height: availableHeight * 0.07,
               child: Row(
@@ -189,11 +190,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   TransactionListKleyte(
                     transactionKleyte,
-                    _removeTransactionKleyte,
+                    removeTransactionKleyte,
                   ),
                   TransactionListBibi(
                     transactionBibi,
-                    _removeTransactionBibi,
+                    removeTransactionBibi,
                   ),
                 ],
               ),
@@ -202,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _openTransactionFormModal(context),
+        onPressed: () => openTransactionFormModal(context),
         child: Icon(Icons.add),
         backgroundColor: Theme.of(context).colorScheme.secondary,
       ),

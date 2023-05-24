@@ -129,9 +129,6 @@ class _TransactionFormState extends State<TransactionForm> {
               children: [
                 ElevatedButton(
                   child: Text('Adicionar'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Theme.of(context).colorScheme.secondary,
-                  ),
                   onPressed: _submitForm,
                 ),
               ],

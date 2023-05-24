@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kleyte_bibi/colors.dart';
 import 'package:kleyte_bibi/models/transaction.dart';
 
 class TotalSum extends StatelessWidget {
@@ -30,7 +31,10 @@ class TotalSum extends StatelessWidget {
       margin: EdgeInsets.all(10),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.blue,
+          border: Border.all(
+            style: BorderStyle.solid,
+          ),
+          color: primary,
         ),
         child: Center(
           child: Text(

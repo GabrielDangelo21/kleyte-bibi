@@ -3,18 +3,22 @@
 // import '../models/transaction.dart';
 
 // class TransactionList extends StatelessWidget {
-//   List<Transaction> _transactions;
+//   List<Transaction> transactions;
 
-//   TransactionList(this._transactions);
+//   addTransaction(String title, double value, int valueRadio, DateTime date) {}
+
+//   TransactionList(this.transactions);
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return ListView.builder(
-//         itemCount: _transactions.length,
-//         itemBuilder: (ctx, index) {
-//           final tr = _transactions[index];
-//           return Container(
-//             child: _transactions);
-//         });
+//     return SingleChildScrollView(
+//       child: Column(
+//         children: [
+//           Container(
+//             child: Text('Estou aqui'),
+//           ),
+//         ],
+//       ),
+//     );
 //   }
 // }
