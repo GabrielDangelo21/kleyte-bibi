@@ -1,17 +1,14 @@
+import 'dart:convert';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:kleyte_bibi/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'components/total_sum.dart';
-// import 'components/transaction_list.dart';
 import 'components/transaction_list_bibi.dart';
 import 'components/transaction_form.dart';
 import 'components/transaction_list_kleyte.dart';
 import 'models/transaction.dart';
 
-void main() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+void main() {
   runApp(const Expenses());
 }
 
@@ -24,8 +21,8 @@ class Expenses extends StatelessWidget {
       home: const MyHomePage(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: primary)
-            .copyWith(secondary: primary),
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
+            .copyWith(secondary: Colors.blueAccent),
       ),
     );
   }
@@ -39,87 +36,82 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  //final DatabaseService _databaseService = DatabaseService.instance;
+  List<Transaction> transactionKleyte = [];
+  List<Transaction> transactionBibi = [];
 
-  //String? _task = null;
+  @override
+  void initState() {
+    super.initState();
+    _loadTransactions();
+  }
 
-  // List<Transaction> transactionList = [];
-  List<Transaction> transactionKleyte = [
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Gasolina',
-    //   value: 50,
-    //   valueRadio: 1,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Gasolina',
-    //   value: 50,
-    //   valueRadio: 1,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Gasolina',
-    //   value: 50,
-    //   valueRadio: 1,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Gasolina',
-    //   value: 50,
-    //   valueRadio: 1,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Gasolina',
-    //   value: 50,
-    //   valueRadio: 1,
-    //   date: DateTime.now(),
-    // ),
-  ];
-  List<Transaction> transactionBibi = [
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Gasolina',
-    //   value: 50,
-    //   valueRadio: 2,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Gasolina',
-    //   value: 50,
-    //   valueRadio: 2,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Gasolina',
-    //   value: 50,
-    //   valueRadio: 2,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Gasolina',
-    //   value: 50,
-    //   valueRadio: 2,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: Random().nextDouble().toString(),
-    //   title: 'Gasolina',
-    //   value: 50,
-    //   valueRadio: 2,
-    //   date: DateTime.now(),
-    // ),
-  ];
+  Future<void> _saveTransactions() async {
+    final prefs = await SharedPreferences.getInstance();
 
-  addTransaction(String title, double value, int valueRadio, DateTime date) {
+    // Serializar as listas em JSON
+    final kleyteData = transactionKleyte
+        .map((tr) => {
+              'id': tr.id,
+              'title': tr.title,
+              'value': tr.value,
+              'valueRadio': tr.valueRadio,
+              'date': tr.date.toIso8601String(),
+            })
+        .toList();
+
+    final bibiData = transactionBibi
+        .map((tr) => {
+              'id': tr.id,
+              'title': tr.title,
+              'value': tr.value,
+              'valueRadio': tr.valueRadio,
+              'date': tr.date.toIso8601String(),
+            })
+        .toList();
+
+    // Salvar como strings JSON no SharedPreferences
+    await prefs.setString('transactionKleyte', jsonEncode(kleyteData));
+    await prefs.setString('transactionBibi', jsonEncode(bibiData));
+  }
+
+  Future<void> _loadTransactions() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Carregar e desserializar os dados
+    final kleyteData = prefs.getString('transactionKleyte');
+    final bibiData = prefs.getString('transactionBibi');
+
+    if (kleyteData != null) {
+      final decodedKleyte = jsonDecode(kleyteData) as List;
+      transactionKleyte = decodedKleyte
+          .map((tr) => Transaction(
+                id: tr['id'],
+                title: tr['title'],
+                value: tr['value'],
+                valueRadio: tr['valueRadio'],
+                date: DateTime.parse(tr['date']),
+              ))
+          .toList();
+    }
+
+    if (bibiData != null) {
+      final decodedBibi = jsonDecode(bibiData) as List;
+      transactionBibi = decodedBibi
+          .map((tr) => Transaction(
+                id: tr['id'],
+                title: tr['title'],
+                value: tr['value'],
+                valueRadio: tr['valueRadio'],
+                date: DateTime.parse(tr['date']),
+              ))
+          .toList();
+    }
+
+    setState(() {});
+  }
+
+  void addTransaction(
+      String title, double value, int valueRadio, DateTime date) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       title: title,
@@ -128,33 +120,35 @@ class _MyHomePageState extends State<MyHomePage> {
       date: date,
     );
 
-    setState(
-      () {
-        if (valueRadio == 1) {
-          transactionKleyte.add(newTransaction);
-          // transactionList.add(newTransaction);
-        } else {
-          transactionBibi.add(newTransaction);
-          // transactionList.add(newTransaction);
-        }
-      },
-    );
+    setState(() {
+      if (valueRadio == 1) {
+        transactionKleyte.add(newTransaction);
+      } else {
+        transactionBibi.add(newTransaction);
+      }
+    });
+
+    _saveTransactions();
     Navigator.of(context).pop();
   }
 
-  removeTransactionKleyte(String id) {
+  void removeTransactionKleyte(String id) {
     setState(() {
       transactionKleyte.removeWhere((tr) => tr.id == id);
     });
+
+    _saveTransactions();
   }
 
-  removeTransactionBibi(String id) {
+  void removeTransactionBibi(String id) {
     setState(() {
       transactionBibi.removeWhere((tr) => tr.id == id);
     });
+
+    _saveTransactions();
   }
 
-  openTransactionFormModal(BuildContext context) {
+  void openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (_) {
@@ -184,7 +178,6 @@ class _MyHomePageState extends State<MyHomePage> {
               height: availableHeight * 0.07,
               child: TotalSum(transactionKleyte, transactionBibi),
             ),
-            // TransactionList(transactionList),
             SizedBox(
               height: availableHeight * 0.07,
               child: const Row(
