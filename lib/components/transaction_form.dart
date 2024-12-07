@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
+import 'package:kleyte_bibi/services/database_service.dart';
 
 class TransactionForm extends StatefulWidget {
   final void Function(String, double, int, DateTime) onSubmit;
 
-  TransactionForm(this.onSubmit);
+  const TransactionForm(this.onSubmit, {super.key});
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
 }
 
 class _TransactionFormState extends State<TransactionForm> {
+  final DatabaseService _databaseService = DatabaseService.instance;
+
   int valueRadio = 1;
   DateTime date = DateTime.now();
 
@@ -20,28 +23,30 @@ class _TransactionFormState extends State<TransactionForm> {
   _submitForm() {
     final title = titleController.text;
     final value = double.tryParse(valueController.text) ?? 0.0;
+    //final date = DateTime.parse(date);
 
     if (title.isEmpty || value <= 0) {
       return;
     }
+    _databaseService.addTask(title, value, valueRadio);
     widget.onSubmit(title, value, valueRadio, date);
   }
 
-  _showDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2021),
-      lastDate: DateTime.now(),
-    ).then((pickedDate) {
-      if (pickedDate == null) {
-        return;
-      }
-      setState(() {
-        date = pickedDate;
-      });
-    });
-  }
+  // _showDatePicker() {
+  //   showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(2021),
+  //     lastDate: DateTime.now(),
+  //   ).then((pickedDate) {
+  //     if (pickedDate == null) {
+  //       return;
+  //     }
+  //     setState(() {
+  //       date = pickedDate;
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +74,10 @@ class _TransactionFormState extends State<TransactionForm> {
                             });
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text('Kleyte'),
+                        const Text('Kleyte'),
                         Radio(
                           value: 2,
                           groupValue: valueRadio,
@@ -82,10 +87,10 @@ class _TransactionFormState extends State<TransactionForm> {
                             });
                           },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text('Bibi'),
+                        const Text('Bibi'),
                       ],
                     ),
                   ],
@@ -93,47 +98,47 @@ class _TransactionFormState extends State<TransactionForm> {
                 TextField(
                   controller: titleController,
                   onSubmitted: (_) => _submitForm(),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Título',
                   ),
                 ),
                 TextField(
                   controller: valueController,
-                  keyboardType: TextInputType.numberWithOptions(
+                  keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
                   ),
                   onSubmitted: (_) => _submitForm(),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Valor (€)',
                   ),
                 ),
-                Container(
-                  height: 70,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Data selecionada: ${DateFormat('dd/MM/y').format(date)}',
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: _showDatePicker,
-                        child: Text(
-                          'Selecionar data',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // SizedBox(
+                //   height: 70,
+                //   child: Row(
+                //     children: [
+                //       Expanded(
+                //         child: Text(
+                //           'Data selecionada: ${DateFormat('dd/MM/y').format(date)}',
+                //         ),
+                //       ),
+                //       TextButton(
+                //         onPressed: _showDatePicker,
+                //         child: const Text(
+                //           'Selecionar data',
+                //           style: TextStyle(
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                      child: Text('Adicionar'),
                       onPressed: _submitForm,
+                      child: const Text('Adicionar'),
                     ),
                   ],
                 ),

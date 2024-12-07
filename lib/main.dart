@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:kleyte_bibi/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'components/total_sum.dart';
 // import 'components/transaction_list.dart';
 import 'components/transaction_list_bibi.dart';
@@ -9,13 +10,18 @@ import 'components/transaction_form.dart';
 import 'components/transaction_list_kleyte.dart';
 import 'models/transaction.dart';
 
-main() => runApp(Expenses());
+void main() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  runApp(const Expenses());
+}
 
 class Expenses extends StatelessWidget {
+  const Expenses({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomePage(),
+      home: const MyHomePage(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(primarySwatch: primary)
@@ -26,11 +32,17 @@ class Expenses extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //final DatabaseService _databaseService = DatabaseService.instance;
+
+  //String? _task = null;
+
   // List<Transaction> transactionList = [];
   List<Transaction> transactionKleyte = [
     // Transaction(
@@ -154,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
-      title: Center(
+      title: const Center(
         child: Text('Kleyte & Bibi'),
       ),
     );
@@ -168,14 +180,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
+            SizedBox(
               height: availableHeight * 0.07,
               child: TotalSum(transactionKleyte, transactionBibi),
             ),
             // TransactionList(transactionList),
-            Container(
+            SizedBox(
               height: availableHeight * 0.07,
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text('Kleyte'),
@@ -183,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               height: availableHeight * 0.86,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,8 +216,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => openTransactionFormModal(context),
-        child: Icon(Icons.add),
         backgroundColor: Theme.of(context).colorScheme.secondary,
+        child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

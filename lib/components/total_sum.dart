@@ -6,7 +6,7 @@ class TotalSum extends StatelessWidget {
   final List<Transaction> transactionsKleyte;
   final List<Transaction> transactionsBibi;
 
-  TotalSum(this.transactionsKleyte, this.transactionsBibi);
+  const TotalSum(this.transactionsKleyte, this.transactionsBibi, {super.key});
 
   double get totalKleyte {
     double sumTotalKleyte = 0;
@@ -28,7 +28,7 @@ class TotalSum extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 6,
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
@@ -38,7 +38,7 @@ class TotalSum extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            'Total €${(totalKleyte - totalBibi).toStringAsFixed(2)}',
+            'Total €${(totalBibi - totalKleyte).toStringAsFixed(2)}',
           ),
         ),
       ),

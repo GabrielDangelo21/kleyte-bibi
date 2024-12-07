@@ -6,7 +6,7 @@ class TransactionListKleyte extends StatelessWidget {
   final List<Transaction> transactions;
   final void Function(String) onRemove;
 
-  TransactionListKleyte(this.transactions, this.onRemove);
+  const TransactionListKleyte(this.transactions, this.onRemove, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class TransactionListKleyte extends StatelessWidget {
                         children: [
                           Container(
                             width: constraints.maxWidth * 0.37,
-                            margin: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                               horizontal: 6,
                               vertical: 4,
                             ),
@@ -38,7 +38,7 @@ class TransactionListKleyte extends StatelessWidget {
                               ),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             child: Text(
                               '€ ${tr.value.toStringAsFixed(2)}',
                               style: TextStyle(
@@ -48,7 +48,7 @@ class TransactionListKleyte extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: constraints.maxWidth * 0.4,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +64,7 @@ class TransactionListKleyte extends StatelessWidget {
                                 ),
                                 Text(
                                   DateFormat('d MMM y').format(tr.date),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 10,
                                   ),
@@ -72,12 +72,12 @@ class TransactionListKleyte extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: constraints.maxWidth * 0.1,
                             child: IconButton(
                               onPressed: () => onRemove(tr.id),
                               iconSize: 14.0,
-                              icon: Icon(Icons.delete),
+                              icon: const Icon(Icons.delete),
                               color: Colors.red,
                             ),
                           )
